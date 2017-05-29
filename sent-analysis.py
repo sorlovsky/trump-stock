@@ -22,7 +22,7 @@ neg_tweets = [('With all of the illegal acts that took place in the Clinton camp
 
 tweets = []
 for (words, sentiment) in pos_tweets + neg_tweets:
-    words_filtered = [e.lower() for e in words.split() if len(e) >= 3] 
+    words_filtered = [e.lower() for e in words.split() if len(e) >= 3]
     tweets.append((words_filtered, sentiment))
 
 
@@ -93,6 +93,3 @@ print classifier.classify(extract_features(tweet.split()))
 
 
 # In[ ]:
-
-
-
