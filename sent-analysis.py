@@ -1,12 +1,4 @@
-
-# coding: utf-8
-
-# In[17]:
-
 import nltk
-
-
-# In[76]:
 
 pos_tweets = [('Big win in Montana for Republicans!', 'positive'),
               ('Thank you to Ford for scrapping a new plant in Mexico and creating 700 new jobs in the U.S. This is just the beginning - much more to follow', 'positive'),
@@ -25,14 +17,6 @@ for (words, sentiment) in pos_tweets + neg_tweets:
     words_filtered = [e.lower() for e in words.split() if len(e) >= 3]
     tweets.append((words_filtered, sentiment))
 
-
-# In[75]:
-
-tweets
-
-
-# In[60]:
-
 def get_words_in_tweets(tweets):
     all_words = []
     for (words, sentiment) in tweets:
@@ -47,13 +31,6 @@ def get_word_features(wordlist):
 word_features = get_word_features(get_words_in_tweets(tweets))
 
 
-# In[61]:
-
-word_features
-
-
-# In[82]:
-
 def extract_features(document):
     document_words = set(document)
     features = {}
@@ -61,35 +38,9 @@ def extract_features(document):
         features['contains: %s' % word] = (word in document_words)
     return features
 
-
-# In[83]:
-
 training_set = nltk.classify.apply_features(extract_features, tweets)
-
-
-# In[84]:
-
-training_set
-
-
-# In[65]:
-
 classifier = nltk.NaiveBayesClassifier.train(training_set)
-
-
-# In[66]:
-
-print classifier.show_most_informative_features(32)
-
-
-# In[80]:
-
-tweet = 'obama and clinton'
-
-
-# In[81]:
-
+# print classifier.shows_most_informative_features(32)
+tweet = 'Clinton'
 print classifier.classify(extract_features(tweet.split()))
 
-
-# In[ ]:
