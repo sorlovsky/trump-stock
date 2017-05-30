@@ -18,6 +18,8 @@ import copy
 import sys
 import scipy.stats
 import nltk
+import matplotlib.pyplot as plt
+import pylab
 
 #importing our files
 from tweet_dumper import *
