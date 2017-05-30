@@ -3,7 +3,7 @@
 * @Author Sabastian Mugazambi & Simon Orlovsky
 * @Date 05/27/2017
 * @Purpose : Analyses a tweet and predicts the effect of the tweet on the mentioned company stock price.
-* @ test : python main.py 2 F realDonaldTrump 'This sucks' 05/27/2017
+* @ test : python main.py 2 F realDonaldTrump 'North Korea has shown great disrespect for their neighbor, China, by shooting off yet another ballistic missile...but China is trying hard!' 05/27/2017
 '''
 #import libraries
 import tweepy #https://github.com/tweepy/tweepy
