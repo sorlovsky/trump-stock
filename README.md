@@ -5,7 +5,7 @@
 3. sentiment_analysis.py
 4. prediction_knn.py
 
-python main.py <k> <Company Ticker Symbol> <Tweet> <date> 
+python main.py <k> <Company Ticker Symbol> <userID> <Tweet> <date> 
 
 Create the main.py, import every library and gile needed - Saba
 Add calls to tweet_dumber.py

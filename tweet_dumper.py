@@ -1,5 +1,10 @@
 
-
+'''
+* @What Data Mining Final Project : Using Tweeter sentiment analysis to predict change in stock price.
+* @Author Sabastian Mugazambi & Simon Orlovsky
+* @Date 05/27/2017
+* @Purpose : Collects all the tweets from a given user name and dumps them in csv file.
+'''
 #!/usr/bin/env python
 # encoding: utf-8
 
@@ -58,8 +63,3 @@ def get_all_tweets(screen_name):
 		writer.writerows(outtweets)
 
 	pass
-
-
-if __name__ == '__main__':
-	#pass in the username of the account you want to download
-	get_all_tweets("Trump2Cash")
