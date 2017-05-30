@@ -24,7 +24,6 @@ import pylab
 #importing our files
 from tweet_dumper import *
 # from sentiment_analysis import *
-
 word_features = 0
 
 def load_training(filename):
@@ -32,7 +31,6 @@ def load_training(filename):
     @Function :  load_training(filename)
     @Args: <filename>
     @Purpose: Takes a training file name csv
-
     """
     pos = []
     neg = []
@@ -55,6 +53,11 @@ def load_training(filename):
     # print all_tweets
 
 def tokenize(pos_tweets, neg_tweets):
+    """
+    @Function :  tokenize(pos_tweets, neg_tweets)
+    @Args: <positive tweets> <negative tweets>
+    @Purpose: takes positive and negative tweets and tokenizes them
+    """
     tweets = []
     for (words, sentiment) in pos_tweets + neg_tweets:
         words_filtered = [e.lower() for e in words.split() if len(e) >= 3]
@@ -62,18 +65,33 @@ def tokenize(pos_tweets, neg_tweets):
     return tweets
 
 def get_words_in_tweets(tweets):
+    """
+    @Function :  get_words_in_tweets(tweets)
+    @Args: <tweets>
+    @Purpose: Takes tweets and gets word features
+    """
     all_words = []
     for (words, sentiment) in tweets:
       all_words.extend(words)
     return all_words
 
 def get_word_features(wordlist):
+    """
+    @Function :  get_word_features(wordlist)
+    @Args: <wordlist>
+    @Purpose: Takes a list of words and converts it into feature list
+    """
     wordlist = nltk.FreqDist(wordlist)
     word_features = wordlist.keys()
     return word_features
 
 
 def extract_features(document):
+    """
+    @Function :  extract_features(document)
+    @Args: <document>
+    @Purpose: Takes an entire documents of words and returns frequency distribution
+    """
     document_words = set(document)
     features = {}
     for word in word_features:
@@ -85,7 +103,6 @@ def main():
     @Function :  Main
     @Args: None <uses sys.argv>
     @Purpose: function and user interface of this program
-
     """
     global word_features
     #getting the argments
