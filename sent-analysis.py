@@ -40,7 +40,6 @@ def extract_features(document):
 
 training_set = nltk.classify.apply_features(extract_features, tweets)
 classifier = nltk.NaiveBayesClassifier.train(training_set)
-# print classifier.shows_most_informative_features(32)
 tweet = 'Clinton'
 print classifier.classify(extract_features(tweet.split()))
 
