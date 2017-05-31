@@ -21,6 +21,11 @@ import nltk
 import matplotlib.pyplot as plt
 import pylab
 
+import quandl
+quandl.ApiConfig.api_key = "mwbHy7C9x4U5HWdxhM9i"
+import pandas
+import datetime
+
 #importing our files
 from tweet_dumper import *
 # from sentiment_analysis import *
@@ -98,6 +103,26 @@ def extract_features(document):
         features['contains: %s' % word] = (word in document_words)
     return features
 
+
+def three_day(ticker, date):
+    try:
+        after = date
+        before = date
+        after += datetime.timedelta(days=1)
+        before -= datetime.timedelta(days=1)
+        data = quandl.get('WIKI/'+ticker, start_date=before, end_date=after)
+        old = data["Close"][0]
+        new = data["Close"][1]
+
+        percent_change = (old - new)/old
+        return percent_change
+
+    except:
+        print "Data not available in WIKI stock data or incorrect ticker: ", ticker
+
+# three_day(ticker)
+
+
 def main():
     """
     @Function :  Main
@@ -135,6 +160,20 @@ def main():
     print "\n------------------------"
     print "\nSentiment Classification :", pred_directional_change
     print "\n------------------------"
+
+    stock_tweets = {}
+    with open('stock_tweets.csv', 'rb') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+        counter = 0
+        for row in spamreader:
+            date_split = row[0].split('-')
+            d = datetime.date(int(date_split[0]), int(date_split[1]), int(date_split[2]))
+            tweet = row[1]
+            ticker = row[2]
+            pred_directional_change =  classifier.classify(extract_features(tweet.split()))
+
+            print three_day(row[2], d), row[2], classifier.prob_classify(extract_features(tweet.split())).prob('positive'), classifier.prob_classify(extract_features(tweet.split())).prob('negative')
+
 
 
 if __name__ == '__main__':
