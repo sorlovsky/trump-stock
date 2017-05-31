@@ -3,7 +3,7 @@
 * @Author Sabastian Mugazambi & Simon Orlovsky
 * @Date 05/27/2017
 * @Purpose : Analyses a tweet and predicts the effect of the tweet on the mentioned company stock price.
-* @ test : python main.py 2 F realDonaldTrump 'North Korea has shown great disrespect for their neighbor, China, by shooting off yet another ballistic missile...but China is trying hard!' 05/27/2017
+* @ test : python main.py 2 F realDonaldTrump 'Totally biased @NBCNews went out of its way to say that the big announcement from Ford, G.M., Lockheed & others that jobs are coming back...' 2017-01-18
 '''
 #import libraries
 import tweepy #https://github.com/tweepy/tweepy
@@ -13,6 +13,7 @@ import numpy as np
 import heapq
 import math
 import collections
+from collections import defaultdict
 import time
 import copy
 import sys
@@ -20,6 +21,13 @@ import scipy.stats
 import nltk
 import matplotlib.pyplot as plt
 import pylab
+import quandl
+quandl.ApiConfig.api_key = "mwbHy7C9x4U5HWdxhM9i"
+
+import matplotlib.pyplot as plt
+import pandas
+import datetime
+import urllib2
 
 import quandl
 quandl.ApiConfig.api_key = "mwbHy7C9x4U5HWdxhM9i"
@@ -28,6 +36,7 @@ import datetime
 
 #importing our files
 from tweet_dumper import *
+from prediction_knn import *
 # from sentiment_analysis import *
 word_features = 0
 
@@ -47,7 +56,7 @@ def load_training(filename):
         pair = pair.split(",\\t")
 
         if(pair[1] == 'positive'):
-        	pos.append((pair[0],pair[1]))
+            pos.append((pair[0],pair[1]))
         else:
             neg.append((pair[0],pair[1]))
 
@@ -104,7 +113,29 @@ def extract_features(document):
     return features
 
 
+def get_price(ticker, date):
+    """
+    @Function :  get_price(ticker, date)
+    @Args: <ticker> <date>
+    @Purpose: gets the price
+    """
+    try:
+        before = date
+        before -= datetime.timedelta(days=1)
+        data = quandl.get('WIKI/'+ticker, start_date=before, end_date=date)
+        new = data["Close"][1]
+        eod = data["Close"][0]
+        return [eod,new]
+
+    except:
+        pass
+
 def three_day(ticker, date):
+    """
+    @Function :  three_day(ticker, date)
+    @Args: <ticker> <date>
+    @Purpose: gets the percentage price change
+    """
     try:
         after = date
         before = date
@@ -118,10 +149,25 @@ def three_day(ticker, date):
         return percent_change
 
     except:
-        print "Data not available in WIKI stock data or incorrect ticker: ", ticker
+        pass
 
 # three_day(ticker)
-
+def get_training_stock():
+    """
+    @Function :  get_training_stock()
+    @Args: None
+    @Purpose: gets the stock prices for the training dataset
+    """
+    dict_train = defaultdict(list)
+    with open('stock_tweets.csv', 'rb') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+        counter = 0
+        for row in spamreader:
+            date_split = row[0].split('-')
+            d = datetime.date(int(date_split[0]), int(date_split[1]), int(date_split[2]))
+            dict_train[row[1]].append(row[2])
+            dict_train[row[1]].append(three_day(row[2], d))
+    return dict_train
 
 def main():
     """
@@ -136,6 +182,8 @@ def main():
     person = sys.argv[3]
     tweet = sys.argv[4]
     date = sys.argv[5]
+    date_split = date.split('-')
+    date = datetime.date(int(date_split[0]), int(date_split[1]), int(date_split[2]))
 
     # STEP 1 : Get and dumb tweets
     #get_all_tweets(person)
@@ -153,28 +201,43 @@ def main():
     #STEP 5 : classify the given tweet as positive or negative sentiment
     classifier = nltk.NaiveBayesClassifier.train(training_set)
     pred_directional_change =  classifier.classify(extract_features(tweet.split()))
+    newpoint = []
+    newpoint.append(classifier.prob_classify(extract_features(tweet.split())).prob('positive'))
+    newpoint.append(classifier.prob_classify(extract_features(tweet.split())).prob('negative'))
 
     #print out the sentiment
     print "\n------------------------"
     print "\nThe tweet is:\n"," '",tweet,"'"
     print "\n------------------------"
-    print "\nSentiment Classification :", pred_directional_change
+    print "\nPredicted Sentiment Classification :", pred_directional_change
     print "\n------------------------"
 
-    stock_tweets = {}
-    with open('stock_tweets.csv', 'rb') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
-        counter = 0
-        for row in spamreader:
-            date_split = row[0].split('-')
-            d = datetime.date(int(date_split[0]), int(date_split[1]), int(date_split[2]))
-            tweet = row[1]
-            ticker = row[2]
-            pred_directional_change =  classifier.classify(extract_features(tweet.split()))
+    # Step 6
+    train =  get_training_stock()
+    for key, value in train.iteritems():
+        pred_directional_change =  classifier.classify(extract_features(key.split()))
+        train[key].append(classifier.prob_classify(extract_features(key.split())).prob('positive'))
+        train[key].append(classifier.prob_classify(extract_features(key.split())).prob('negative'))
 
-            print three_day(row[2], d), row[2], classifier.prob_classify(extract_features(tweet.split())).prob('positive'), classifier.prob_classify(extract_features(tweet.split())).prob('negative')
+    percentage_change =  run_knn(pred_k,train,newpoint)
 
+    print "\nPredicted Pecentage Change in Price :", percentage_change
+    print "\n------------------------"
+
+    #STEP 7 Calculate predicted price EOD
+
+    opening_price = get_price(c_symbol,date)
+    # pred_price = opening_price
+    # * (1+percentage_change)
+    if(pred_directional_change == "negative"):
+        pred_price = opening_price[0]* (1-percentage_change)
+    else:
+        pred_price = opening_price[0] * (1+percentage_change)
+
+
+    print "\nPredicted Price Due to Tweet:", pred_price
+    print "\nActuall EOD Price:", opening_price[1]
 
 
 if __name__ == '__main__':
-	main()
+    main()

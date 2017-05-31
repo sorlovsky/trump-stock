@@ -35,12 +35,12 @@ def three_day(ticker, date):
 def one_day(ticker):
 
 # three_day(ticker)
-
-with open('stock_tweets.csv', 'rb') as csvfile:
-	spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
-	counter = 0
-	for row in spamreader:
-		date_split = row[0].split('-')
-		d = datetime.date(int(date_split[0]), int(date_split[1]), int(date_split[2]))
-		print three_day(row[2], d), row[2]
-		# print row[2]
+def get_training_stock():
+	with open('stock_tweets.csv', 'rb') as csvfile:
+		spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+		counter = 0
+		for row in spamreader:
+			date_split = row[0].split('-')
+			d = datetime.date(int(date_split[0]), int(date_split[1]), int(date_split[2]))
+			print three_day(row[2], d), row[2]
+			# print row[2]
