@@ -16,16 +16,19 @@ def euclidean(train,newpoint,k):
     tickers_list = list()
     pec_change = list()
 
+    #Getting the price changes fro the training points
     for key, value in train.iteritems():
         tickers_list.append(value[0])
         y = [value[2],value[3]]
         pec_change.append(value[1])
+        #euclidean distance calculation
         cal_dis.append(math.sqrt(np.sum(np.subtract(newpoint,y)**2)))
 
     voters = np.argsort(cal_dis,axis=-1,kind="mergesort",order=None)
     nearest_stocks = list()
     nearest_pc_changes = list()
 
+    #finding the average of the n neighbors
     for i in range(0,k):
         v = voters[i]
         if(pec_change[v]!= None):

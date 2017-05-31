@@ -109,18 +109,28 @@ def extract_features(document):
 
 
 def get_price(ticker, date):
+    """
+    @Function :  get_price(ticker, date)
+    @Args: <ticker> <date>
+    @Purpose: gets the price
+    """
     try:
         before = date
         before -= datetime.timedelta(days=1)
         data = quandl.get('WIKI/'+ticker, start_date=before, end_date=date)
-        # old = data["Close"][0]
         new = data["Close"][1]
-        return new
+        eod = data["Close"][0]
+        return [eod,new]
 
     except:
         pass
 
 def three_day(ticker, date):
+    """
+    @Function :  three_day(ticker, date)
+    @Args: <ticker> <date>
+    @Purpose: gets the percentage price change
+    """
     try:
         after = date
         before = date
@@ -138,6 +148,11 @@ def three_day(ticker, date):
 
 # three_day(ticker)
 def get_training_stock():
+    """
+    @Function :  get_training_stock()
+    @Args: None
+    @Purpose: gets the stock prices for the training dataset
+    """
     dict_train = defaultdict(list)
     with open('stock_tweets.csv', 'rb') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
@@ -207,14 +222,16 @@ def main():
     #STEP 7 Calculate predicted price EOD
 
     opening_price = get_price(c_symbol,date)
-    pred_price = opening_price * (1+percentage_change)
-    # if(pred_directional_change == "negative"):
-    #     pred_price = opening_price * (1-percentage_change)
-    # else:
-    #     pred_price = opening_price * (1+percentage_change)
+    # pred_price = opening_price
+    # * (1+percentage_change)
+    if(pred_directional_change == "negative"):
+        pred_price = opening_price[0]* (1-percentage_change)
+    else:
+        pred_price = opening_price[0] * (1+percentage_change)
 
 
     print "\nPredicted Price Due to Tweet:", pred_price
+    print "\nActuall EOD Price:", opening_price[1]
     print "\n------------------------"
 
 if __name__ == '__main__':
