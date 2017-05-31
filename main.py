@@ -207,10 +207,11 @@ def main():
     #STEP 7 Calculate predicted price EOD
 
     opening_price = get_price(c_symbol,date)
-    if(pred_directional_change == "negative"):
-        pred_price = opening_price * (1-percentage_change)
-    else:
-        pred_price = opening_price * (1+percentage_change)
+    pred_price = opening_price * (1+percentage_change)
+    # if(pred_directional_change == "negative"):
+    #     pred_price = opening_price * (1-percentage_change)
+    # else:
+    #     pred_price = opening_price * (1+percentage_change)
 
 
     print "\nPredicted Price Due to Tweet:", pred_price
