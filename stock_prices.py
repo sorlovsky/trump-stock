@@ -32,6 +32,8 @@ def three_day(ticker, date):
 	except:
 		print "Data not available in WIKI stock data or incorrect ticker: ", ticker
 
+def one_day(ticker):
+
 # three_day(ticker)
 def get_training_stock():
 	with open('stock_tweets.csv', 'rb') as csvfile:

@@ -29,6 +29,11 @@ import pandas
 import datetime
 import urllib2
 
+import quandl
+quandl.ApiConfig.api_key = "mwbHy7C9x4U5HWdxhM9i"
+import pandas
+import datetime
+
 #importing our files
 from tweet_dumper import *
 from prediction_knn import *
@@ -232,7 +237,7 @@ def main():
 
     print "\nPredicted Price Due to Tweet:", pred_price
     print "\nActuall EOD Price:", opening_price[1]
-    print "\n------------------------"
+
 
 if __name__ == '__main__':
     main()
