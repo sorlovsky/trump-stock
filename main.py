@@ -231,7 +231,7 @@ def main():
 
 
     print "\nPredicted Price Due to Tweet:", pred_price
-    print "\nActuall EOD Price:", opening_price[1]
+    print "\nActual EOD Price:", opening_price[1]
 
 
 if __name__ == '__main__':
