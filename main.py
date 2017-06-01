@@ -23,16 +23,10 @@ import matplotlib.pyplot as plt
 import pylab
 import quandl
 quandl.ApiConfig.api_key = "mwbHy7C9x4U5HWdxhM9i"
-
 import matplotlib.pyplot as plt
 import pandas
 import datetime
 import urllib2
-
-import quandl
-quandl.ApiConfig.api_key = "mwbHy7C9x4U5HWdxhM9i"
-import pandas
-import datetime
 
 #importing our files
 from tweet_dumper import *
@@ -186,7 +180,8 @@ def main():
     date = datetime.date(int(date_split[0]), int(date_split[1]), int(date_split[2]))
 
     # STEP 1 : Get and dumb tweets
-    #get_all_tweets(person)
+    #Only uncomment the line below if you want to dumb the tweets from scratch but we have done that for you.
+    #get_all_tweets('realDonaldTrump')
 
     # STEP 2 : Create training sets
     train_data = load_training("training_tweets.csv")

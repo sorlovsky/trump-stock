@@ -31,9 +31,19 @@ def euclidean(train,newpoint,k):
     #finding the average of the n neighbors
     for i in range(0,k):
         v = voters[i]
+        print pec_change[v]
         if(pec_change[v]!= None):
             nearest_stocks.append(tickers_list[v])
             nearest_pc_changes.append(pec_change[v])
+        elif(k==1):
+            while(pec_change[v]== None):
+                i+=1
+                v = voters[i]
+            nearest_stocks.append(tickers_list[v])
+            nearest_pc_changes.append(pec_change[v])
+
+
+    print nearest_pc_changes
 
     return np.mean(nearest_pc_changes)
 

@@ -9,10 +9,12 @@ List of Files
 _____________
 
 1. main.py - main file to run
-2. tweet_dumper.py - gets tweets to be used
+2. tweet_dumper.py - gets tweets to be used / already done for you
 3. stock_prices.py - gets stock prices
 4. prediction_knn.py - predicts the price change using knn
 5. get-pip.py - Used for installing pip
+
+csv files are used for data import.
 
 Dependencies
 _____________
